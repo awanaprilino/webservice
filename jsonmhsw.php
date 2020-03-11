@@ -22,23 +22,26 @@ $link = mysqli_connect('localhost', 'id12777751_root', '123456', 'id12777751_aka
 mysqli_set_charset($link,'utf8');
  
 $data = preg_replace('/[^a-z0-9_]+/i','',array_shift($request));
-
+echo "isinya data===".$data;
+echo "|||";
 $id = array_shift($request);
+echo "isinya data===".$id;
+echo "|||";
 
 
-if (strcmp($data, 'data') !=0) {
+if (strcmp($data, 'data') ==0) {
  switch ($method) {
  case 'GET':
      {
     if (empty($data))
     {
     $sql = "select * from pkl"; 
-    break;
+    echo "select * from pkl ";break;
     }
     else
     {
-         $sql = "select * from pkl where nim='$data'";
-         break;
+         $sql = "select * from pkl where nim='$id'";
+         echo "select * from pkl where nim='$id'";break;
         
         
     }
@@ -50,8 +53,18 @@ if (strcmp($data, 'data') !=0) {
  }
  
  
- if ($method == 'GET') {
+ 
  $result = mysqli_query($link,$sql);
+ 
+ if (!$result) {
+ http_response_code(404);
+ die(mysqli_error());
+ }
+ 
+ 
+ 
+ 
+ if ($method == 'GET') {
  $hasil=array();
  while($row = mysqli_fetch_array($result, MYSQLI_ASSOC))
  {
@@ -66,6 +79,7 @@ if (strcmp($data, 'data') !=0) {
 
 else{
  $hasil1 = array('status' => false, 'message' => 'Access Denied');
+ echo json_encode($hasil1);
 }
 
 if ($method == 'POST') {
@@ -84,8 +98,6 @@ if ($method == 'POST') {
 		$querycek = "SELECT nim,nama,prodi FROM pkl WHERE nim ='$nimmhsw'";
 		echo "query select ".$querycek;
 		$result=mysqli_query($link,$querycek);
-		$row = mysqli_fetch_assoc($result);
-		echo "result =".$row;
 		
 		if ( $rowcount == 0)
 		{
